@@ -1,0 +1,23 @@
+{
+  "name": "feedbot",
+  "version": "0.0.1",
+  "description": "A bot that fetches RSS feed and tweets them",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "rss",
+    "feed",
+    "xml",
+    "bot",
+    "twitter"
+  ],
+  "author": "Abu Ashraf Masnun",
+  "license": "ISC",
+  "dependencies": {
+    "feed-read": "0.0.1",
+    "mongodb": "^1.4.19",
+    "q": "^1.0.1"
+  }
+}
