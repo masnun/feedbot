@@ -3,8 +3,11 @@ var app = express();
 var config = require("./app/config");
 var helper = require("./app/helpers");
 
+app.use("/static", express.static("./app/static"));
+app.set("views", "./app/views");
+
 app.get("/", function (req, res) {
-    res.send("Hello !");
+    res.render("home.jade", {title: "Feedbot"});
 });
 
 app.get("/api", function (req, res) {

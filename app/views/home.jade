@@ -1,0 +1,11 @@
+extends base
+
+block head
+    script(src="/static/js/controllers/home.js")
+
+block content
+    div(ng-controller="HomeController")#links
+        ul(ng-repeat="article in articles")
+            li: a(href="{{article.link}}") {{article.title}}
+
+
