@@ -16,6 +16,7 @@
   "author": "Abu Ashraf Masnun",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.10.1",
     "feed-read": "0.0.1",
     "mongodb": "^1.4.19",
     "q": "^1.0.1"

@@ -1,6 +1,6 @@
-var helper = require("./helpers");
+var helper = require("./app/helpers");
 var Q = require("q");
-var mongoConfig = require("./../config")['mongo'];
+var config = require("./app/config");
 
 
 var feedCollection = [
@@ -9,7 +9,7 @@ var feedCollection = [
 
 ];
 
-var dbPromise = helper.getMongoCollectionPromise(mongoConfig);
+var dbPromise = helper.getMongoCollectionPromise(config['mongo']);
 
 dbPromise.then(function (db) {
     var feedPromises = helper.getFeedPromises(feedCollection);

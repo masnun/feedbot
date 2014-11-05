@@ -1,6 +1,6 @@
 var Q = require("q");
 var feedReader = require("feed-read");
-
+var config = require("./config");
 var mongoClient = require("mongodb").MongoClient;
 
 function getFeedPromise(url) {
@@ -89,5 +89,28 @@ exports.collectArticles = function (data) {
     });
 
     return articles
+};
+
+exports.getLatestArticles = function () {
+    var deferred = Q.defer();
+
+    mongoClient.connect(config['mongo'], function (err, db) {
+        if (err) {
+            deferred.reject(new Error(err));
+        } else {
+            db.collection("articles").find({}, {
+                sort: [['_id', 'desc']],
+                limit: 5
+            }).toArray(function (err, docs) {
+                if (err) {
+                    deferred.reject(new Error(err));
+                } else {
+                    db.close();
+                    deferred.resolve(docs)
+                }
+            });
+        }
+    });
+    return deferred.promise;
 };
 
