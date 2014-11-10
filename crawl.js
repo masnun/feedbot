@@ -22,11 +22,7 @@ dbPromise.then(function (db) {
             });
         });
 
-
-
-        var articlePromises = helper.getArticlesPromises(articles, db);
-
-
+        var articlePromises = helper.processArticles(articles, db);
         articlePromises.forEach(function (promise) {
             promise.then(function (resp) {
                 console.log(resp);

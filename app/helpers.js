@@ -3,7 +3,7 @@ var feedReader = require("feed-read");
 var config = require("./config");
 var mongoClient = require("mongodb").MongoClient;
 
-exports.getArticlesPromises = function (articles, db) {
+exports.processArticles = function (articles, db) {
     var articlePromises = [];
     articles.forEach(function (article) {
         articlePromises.push(function (article, mongoCollection) {
