@@ -27,6 +27,7 @@ function processArticle(article, mongoCollection) {
                     title: article.title,
                     link: article.link,
                     author: article.author,
+                    //content: article.content,
                     published: article.published
 
                 }, function (err, resp) {
@@ -100,7 +101,7 @@ exports.getLatestArticles = function () {
         } else {
             db.collection("articles").find({}, {
                 sort: [['_id', 'desc']],
-                limit: 5
+                limit: 20
             }).toArray(function (err, docs) {
                 if (err) {
                     deferred.reject(new Error(err));

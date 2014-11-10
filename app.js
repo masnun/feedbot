@@ -17,6 +17,7 @@ app.get("/api", function (req, res) {
             articles.push({
                 title: doc.title,
                 link: doc.link,
+                //content: doc.content,
                 id: doc._id
 
             });
