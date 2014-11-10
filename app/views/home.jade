@@ -9,8 +9,6 @@ block content
         div.header
             ul(class="nav nav-pills pull-right" role="tablist")
                 li(role="presentation" class="active"): a(href="#") Home
-                li(role="presentation"): a(href="#") About
-                li(role="presentation"): a(href="#") Contact
 
             h3(class="text-muted") Feedbot
 
@@ -21,4 +19,11 @@ block content
             ul(ng-repeat="article in articles")
                 li: a(href="{{article.link}}" target="_blank") {{article.title}}
 
+
+
+
+        div.footer
+            |Created as a part of hack day @
+            a(href="http://www.timedoctor.com/?a_aid=544dda60836e0") TimeDoctor
+            | - the best time tracking app out there
 
