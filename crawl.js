@@ -12,10 +12,21 @@ var feedCollection = [
 var dbPromise = helper.getMongoCollectionPromise(config['mongo']);
 
 dbPromise.then(function (db) {
-    var feedPromises = helper.getFeedPromises(feedCollection);
+    var feedPromises = helper.getArticlesFromFeed(feedCollection);
     Q.all(feedPromises).then(function (data) {
-        var articles = helper.collectArticles(data);
+
+        var articles = [];
+        data.forEach(function (feedContent) {
+            feedContent.forEach(function (article) {
+                articles.push(article);
+            });
+        });
+
+
+
         var articlePromises = helper.getArticlesPromises(articles, db);
+
+
         articlePromises.forEach(function (promise) {
             promise.then(function (resp) {
                 console.log(resp);

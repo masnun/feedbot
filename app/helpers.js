@@ -3,57 +3,41 @@ var feedReader = require("feed-read");
 var config = require("./config");
 var mongoClient = require("mongodb").MongoClient;
 
-function getFeedPromise(url) {
-    var deferred = Q.defer();
-    feedReader(url, function (err, articles) {
-        if (err) {
-            deferred.reject(new Error(err));
-        } else {
-            deferred.resolve(articles)
-        }
-    });
-
-    return deferred.promise;
-}
-
-function processArticle(article, mongoCollection) {
-    var deferred = Q.defer();
-    mongoCollection.findOne({link: article.link}, function (err, item) {
-        if (err) {
-            deferred.reject(new Error(err));
-        } else {
-            if (item == null) {
-                mongoCollection.insert({
-                    title: article.title,
-                    link: article.link,
-                    author: article.author,
-                    //content: article.content,
-                    published: article.published
-
-                }, function (err, resp) {
-                    if (err) {
-                        deferred.reject(new Error(err));
-                    } else {
-                        deferred.resolve("Stored: " + article.title)
-                    }
-                });
-            } else {
-                deferred.resolve("Article exists: " + article.title);
-            }
-        }
-
-
-    });
-
-    return deferred.promise;
-
-}
-
-
 exports.getArticlesPromises = function (articles, db) {
     var articlePromises = [];
     articles.forEach(function (article) {
-        articlePromises.push(processArticle(article, db));
+        articlePromises.push(function (article, mongoCollection) {
+            var deferred = Q.defer();
+            mongoCollection.findOne({link: article.link}, function (err, item) {
+                if (err) {
+                    deferred.reject(new Error(err));
+                } else {
+                    if (item == null) {
+                        mongoCollection.insert({
+                            title: article.title,
+                            link: article.link,
+                            author: article.author,
+                            //content: article.content,
+                            published: article.published
+
+                        }, function (err, resp) {
+                            if (err) {
+                                deferred.reject(new Error(err));
+                            } else {
+                                deferred.resolve("Stored: " + article.title)
+                            }
+                        });
+                    } else {
+                        deferred.resolve("Article exists: " + article.title);
+                    }
+                }
+
+
+            });
+
+            return deferred.promise;
+
+        }(article, db));
     });
 
     return articlePromises;
@@ -72,24 +56,24 @@ exports.getMongoCollectionPromise = function (config) {
     return deferred.promise;
 };
 
-exports.getFeedPromises = function (feedCollection) {
+exports.getArticlesFromFeed = function (feeds) {
     var feedPromises = [];
-    feedCollection.forEach(function (url) {
-        feedPromises.push(getFeedPromise(url));
+    feeds.forEach(function (url) {
+        feedPromises.push(function (url) {
+            var deferred = Q.defer();
+            feedReader(url, function (err, articles) {
+                if (err) {
+                    deferred.reject(new Error(err));
+                } else {
+                    deferred.resolve(articles)
+                }
+            });
+
+            return deferred.promise;
+        }(url));
     });
 
     return feedPromises;
-};
-
-exports.collectArticles = function (data) {
-    var articles = [];
-    data.forEach(function (ac) {
-        ac.forEach(function (article) {
-            articles.push(article);
-        });
-    });
-
-    return articles
 };
 
 exports.getLatestArticles = function () {
@@ -114,4 +98,3 @@ exports.getLatestArticles = function () {
     });
     return deferred.promise;
 };
-
